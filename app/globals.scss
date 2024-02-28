@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap');
+
+body {
+    font-family: 'Kode Mono', monospace;
+    font-size: 16px;
+    line-height: 1.5;
+    background-color: #f4f4f4;
+    padding: 10px;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+}
+
+input {
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 5px 20px;
+    color: rgb(0, 0, 0);
+    background-color: #ccc !important;
+    border-radius: 5px;
+    width: fit-content;
+    transition: 0.8s;
+
+    &:hover {
+        filter: brightness(0.8);
+    }
+}
+
+form button {
+    align-self: flex-end;
+}
