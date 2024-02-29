@@ -7,40 +7,28 @@ import { cookies } from 'next/headers';
 const pb = new PocketBase(process.env.POCKETBASE_URL);
 
 export async function checkAuth() {
+  try {
     const cookie = cookies().get('pb_auth');
-
-    try {
-      const { token, model } = JSON.parse(cookie.value);
-      pb.authStore.loadFromCookie(cookie);
-    
-      return { token, model };
-    } catch (e) {
-      return null;
-    }
+    pb.authStore.loadFromCookie(cookie.value);
+    return pb.authStore.model;
+  } catch (e) {
+    return null;
+  }
 }
 
 export async function login(formData) {
   const email = formData.email
   const password = formData.password
 
-  const { token, record: model } = await pb
-    .collection('users')
-    .authWithPassword(email, password);
+  await pb.collection('users').authWithPassword(email, password);
 
-  const cookie = JSON.stringify({ token, model });
-
-  cookies().set('pb_auth', cookie, {
-    secure: true,
-    path: '/',
-    sameSite: 'strict',
-    httpOnly: true,
-  });
+  cookies().set("pb_auth", pb.authStore.exportToCookie());
 
   redirect('/dashboard');
 }
 
 export async function logout() {
   cookies().delete('pb_auth');
-
+  pb.authStore.clear();
   redirect('/');
 }

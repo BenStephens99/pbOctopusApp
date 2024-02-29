@@ -3,8 +3,7 @@ import { checkAuth } from "../actions/auth/authActions";
 export default async function Header() {
     let model = null;
     try {
-        const res = await checkAuth();
-        model = res.model;
+        model = await checkAuth();
     } catch (e) {
         console.log(e);
     }
