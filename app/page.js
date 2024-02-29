@@ -11,19 +11,19 @@ export default async function Home() {
     const res = await checkAuth();
     token = res.token;
     model = res.model;
-  } catch (e) {}
+  } catch (e) { }
 
   return (
-    <main>
-      <h1>Home</h1>
-      {token ?
-      <div>
-        <div>{`Logged in as ${model.email}`}</div>
-        <Logout />
-      </div>
-        :
-        <Login />
-      }
-    </main>
+    <>
+      <main>
+        <div className="flex justify-center">
+          {token ?
+            <Logout />
+            :
+            <Login />
+          }
+        </div>
+      </main>
+    </>
   );
 }

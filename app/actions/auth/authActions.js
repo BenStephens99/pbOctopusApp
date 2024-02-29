@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import PocketBase from 'pocketbase';
 import { cookies } from 'next/headers';
 
-const pb = new PocketBase('http://139.162.247.126:80');
+const pb = new PocketBase(process.env.POCKETBASE_URL);
 
 export async function checkAuth() {
     const cookie = cookies().get('pb_auth');

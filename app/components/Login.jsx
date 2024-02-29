@@ -17,7 +17,7 @@ export default function Login() {
             <h3>Login</h3>
             <form onSubmit={handleSubmit}>
                 <input
-                    type="email"
+                    type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
