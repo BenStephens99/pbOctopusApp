@@ -1,15 +1,22 @@
 'use client';
 
-import { login } from "../actions/auth/authActions";
+import { login } from "../../actions/auth/authActions";
 import { useState } from "react";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = (e) => {
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        login({ email, password });
+        
+        try {
+            await login({ email, password });
+        } catch (e) {
+            setErrorMessage('Invalid email or password');
+        }
     };
 
     return (
@@ -29,6 +36,7 @@ export default function Login() {
                     placeholder="Password"
                 />
                 <button type="submit">Login</button>
+                <p>{errorMessage}</p>
             </form>
         </main>
     );
