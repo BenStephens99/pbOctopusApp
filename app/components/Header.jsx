@@ -12,7 +12,7 @@ export default async function Header() {
 
   return (
     <header className="flex justify-between flex-wrap">
-        <a href="/">
+        <a href="/dashboard">
           <h1>Home</h1>
         </a>
         {authValid ? 

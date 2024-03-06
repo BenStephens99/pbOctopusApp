@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react"
 import { getProducts, getSingleRegisterElectricityTariffs, getSingleRegisterGasTariffs } from "@/app/actions/octopus";
 
+import { addElectricTariff } from "@/app/actions/tariffs";
+import { addGasTariff } from "@/app/actions/tariffs";
+
 export function AddTariff(props) {
 
   const type = props.type || 'Electric';
@@ -13,6 +16,7 @@ export function AddTariff(props) {
   const [singleRegisterTariffs, setSingleRegisterTariffs] = useState();
 
   const [productCode, setProductCode] = useState('')
+  const [productName, setProductName] = useState('')
   const [tariffCode, setTariffCode] = useState('');
   const [organisation, setOrganisation] = useState('');
 
@@ -44,6 +48,7 @@ export function AddTariff(props) {
     }
     if (productCode) {
       fetchData();
+      setProductName(products.find((product) => product.code === productCode)?.display_name || '');
     }
   }, [productCode]);
 
@@ -57,6 +62,29 @@ export function AddTariff(props) {
     }
   }, [tariffCode, productCode]);
 
+  const saveTariff = async (e) => {
+    e.preventDefault();
+    switch (type) {
+      case 'electric':
+        await addElectricTariff({
+          name: `${productName} - ${tariffCode}`,
+          productCode,
+          tariffCode,
+          organisation
+        });
+        break;
+      case 'gas':
+        await addGasTariff({
+          name: `${productName} - ${tariffCode}`,
+          productCode,
+          tariffCode,
+          organisation
+        });
+        break;
+      default:
+        break;
+    }
+  }
 
   return (
     <>
@@ -66,10 +94,11 @@ export function AddTariff(props) {
         <div className="modal">
           <div className="modal-body max-w-screen-lg">
             <h3 className="capitalize">{type} Tariff</h3>
-            <form className="max-w-full">
+            <form className="max-w-full" onSubmit={saveTariff}>
               <div>
                 <h4>Product</h4>
-                <select onChange={(e) => setProductCode(e.target.value)} value={productCode}
+                <select onChange={(e) => setProductCode(e.target.value)} 
+                  value={productCode}
                   className={!productCode ? 'bg-white' : 'bg-blue-200'}
                 >
                   <option value="" className="bg-white">Select a product</option>
@@ -129,7 +158,7 @@ export function AddTariff(props) {
                 : ''}
               <div className="flex gap-2 justify-end">
                 <button onClick={() => setShowModal(false)}>Cancel</button>
-                {showSaveButton ? <button>Save</button> : ''}
+                {showSaveButton ? <button type="submit">Save</button> : ''}
               </div>
             </form>
           </div>

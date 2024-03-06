@@ -58,6 +58,7 @@ export async function addHouse (formData) {
         elec_serial_num: formData.electricSerial,
         gas_mprn: formData.gasMprn,
         gas_serial_num: formData.gasSerial,
+        
     }
 
     if (!organisation) {
@@ -72,4 +73,24 @@ export async function addHouse (formData) {
     await addHouseToOrganisation(organisation, res.id);
 
     return res.id
+}
+
+export async function updateHouse (formData) {
+    const pb = await getPb();
+
+    console.log(formData);
+
+    const data = {
+        name: formData.name,
+        elec_mpan: formData.elecMpan,
+        elec_serial_num: formData.elecSerial,
+        electric_tariff: formData.elecTariff,
+        gas_mprn: formData.gasMprn,
+        gas_serial_num: formData.gasSerial,
+        gas_tariff: formData.gasTariff
+    }
+
+    const res = await pb.collection('houses').update(formData.id, data);
+
+    return res;
 }

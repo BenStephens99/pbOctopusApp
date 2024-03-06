@@ -43,6 +43,12 @@ export async function addHouseToOrganisation(organisationId, houseId) {
   return res;
 }
 
+export async function getOrganisation (organisationId) {
+  const pb = await getPb();
+  const res = await pb.collection('organisations').getOne(organisationId);
+  return res;
+}
+
 export async function deleteOrganisation(id) {
   const pb = await getPb();
   const res = await pb.collection('organisations').delete(id);

@@ -7,7 +7,8 @@ const pb = new PocketBase(process.env.POCKETBASE_URL);
 export function middleware(request) {
   const forbiddenUrls = [
       '/organisations',
-      '/houses'
+      '/houses',
+      'dashboard'
   ];
 
   const redirectToHome = (request) => {
