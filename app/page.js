@@ -18,7 +18,7 @@ export default async function Home() {
           {authValid ?
             <Logout />
             :
-            <div>
+            <div className="">
               <Login />
               <SignUp />
             </div>

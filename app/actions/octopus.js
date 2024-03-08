@@ -1,65 +1,154 @@
 'use server'
-import { getHouse } from "./houses"
-import { getOrganisations, getOrganisation } from "./organisations"
-import { getKey } from "./keys"
+import { getAccounts } from "./account";
 
-export async function test() {
-    const res = await fetch('https://api.octopus.energy/v1/products/VAR-22-11-01/')
-    const data = await res.json()
+export async function getOctopusAccount(accountNumber, apiKey) {
+    const url = `https://api.octopus.energy/v1/accounts/${accountNumber}/`
 
-    return data
-}
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa(apiKey + ':')}` 
+        },
+    });
 
-export async function getProducts() {
-    const res = await fetch('https://api.octopus.energy/v1/products/')
-    const data = await res.json()
+    const data = await response.json();
+    return data;
+} 
 
+export async function getOctopusAccounts () {
+    const accounts = await getAccounts()
 
-    return data.results
-}
+    let octopusAccounts = []
 
-export async function getSingleRegisterElectricityTariffs(productCode) {
-    const res = await fetch(`https://api.octopus.energy/v1/products/${productCode}/`)
-    const data = await res.json()
-
-    return data.single_register_electricity_tariffs
-}
-
-export async function getSingleRegisterGasTariffs(productCode) {
-    const res = await fetch(`https://api.octopus.energy/v1/products/${productCode}/`)
-    const data = await res.json()
-
-    return data.single_register_gas_tariffs
-}
-
-export async function getElectricUsage() {
-    const organisations = await getOrganisations()
-
-    for (const o of organisations) {
-        const organisation = await getOrganisation(o.id)
-        const key = await getKey(organisation.api_key)
-        for (const h of organisation.houses) {
-            const house = await getHouse(h)
-
-            const url = `https://api.octopus.energy/v1/electricity-meter-points/${house.mpan}/meters/${house.mprn}/consumption/`
-            
-            console.log(key)
-
-            try {
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Basic ${btoa(key + ':')}` // Use btoa to encode the apiKey and ':' in base64
-                    },
-                });
-
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
+    for (let account of accounts) {
+        const octopusAccount = await getOctopusAccount(account.account_number, account.api_key)
+        octopusAccounts.push({
+            name: account.name,
+            key: account.api_key,
+            product_code: account.product_code,
+            ...octopusAccount
+        })
     }
+
+    return octopusAccounts
 }
 
+export async function getProducts () {
+    const url = `https://api.octopus.energy/v1/products/`
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    const data = await response.json();
+    return data;
+}
+
+export async function getElectricUsage(apiKey, mpan, serialNumber, from, to, group_by = 'day') {
+    const url = `https://api.octopus.energy/v1/electricity-meter-points/${mpan}/meters/${serialNumber}/consumption/?period_from=${from}&period_to=${to}&order_by=period&group_by=${group_by}`
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa(apiKey + ':')}` 
+        },
+    });
+
+    const data = await response.json();
+
+    return data.results;
+} 
+
+export async function getElectricUnitRates (product_code, tariff_code, from, to) {
+    const url = `https://api.octopus.energy/v1/products/${product_code}/electricity-tariffs/${tariff_code}/standard-unit-rates/?period_from=${from}&period_to=${to}`
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    let data = await response.json();
+    data = data.results
+
+    data = data.filter(result => result.payment_method === 'DIRECT_DEBIT')
+
+    
+    return data;
+}
+
+export async function getElectricStandingCharges (product_code, tariff_code, from, to) {
+    const url = `https://api.octopus.energy/v1/products/${product_code}/electricity-tariffs/${tariff_code}/standing-charges/?period_from=${from}&period_to=${to}`
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    let data = await response.json();
+    data = data.results
+
+    data = data.filter(result => result.payment_method === 'DIRECT_DEBIT')
+
+    return data;
+}
+
+export async function getGasUsage(apiKey, mprn, serialNumber, from, to, group_by = 'day') {
+    const url = `https://api.octopus.energy/v1/gas-meter-points/${mprn}/meters/${serialNumber}/consumption/?period_from=${from}&period_to=${to}&order_by=period&group_by=${group_by}`
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa(apiKey + ':')}` 
+        },
+    });
+
+    const data = await response.json();
+
+    return data.results;
+}
+
+export async function getGasUnitRates (product_code, tariff_code, from, to) {
+    const url = `https://api.octopus.energy/v1/products/${product_code}/gas-tariffs/${tariff_code}/standard-unit-rates/?period_from=${from}&period_to=${to}`
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    let data = await response.json();
+    data = data.results
+
+    data = data.filter(result => result.payment_method === 'DIRECT_DEBIT')
+
+    return data;
+}
+
+export async function getGasStandingCharges (product_code, tariff_code, from, to) {
+    const url = `https://api.octopus.energy/v1/products/${product_code}/gas-tariffs/${tariff_code}/standing-charges/?period_from=${from}&period_to=${to}`
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    let data = await response.json();
+    data = data.results
+
+    data = data.filter(result => result.payment_method === 'DIRECT_DEBIT')
+
+    return data;
+}

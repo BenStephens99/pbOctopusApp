@@ -42,7 +42,7 @@ export async function login(formData) {
 
     cookies().set("pb_auth", pb.authStore.exportToCookie());
 
-    redirect('/organisations');
+    redirect('/properties');
   }
 
 export async function logout() {
