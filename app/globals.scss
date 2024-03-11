@@ -7,7 +7,6 @@ body {
     font-family: "Montserrat", sans-serif;
     font-size: 16px;
     line-height: 1.5;
-    background-color: #f4f4f4;
     padding: 10px;
     max-width: 1440px;
     margin: 0 auto;
@@ -39,27 +38,6 @@ form {
     gap: 10px;
     max-width: 450px;
 }
-
-input, select {
-    border-radius: 5px;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-}
-
-button {
-    padding: 0.25rem 0.75rem;
-    color: white;
-    background-color: #686868 !important;
-    border-radius: 5px;
-    width: fit-content;
-    height: fit-content;
-    transition: 0.3s;
-
-    &:hover {
-        background-color: #0b0b0b !important;
-    }
-}
-
 form button {
     align-self: flex-end;
 }

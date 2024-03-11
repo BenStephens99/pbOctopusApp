@@ -65,6 +65,9 @@ export async function getElectricUsage(apiKey, mpan, serialNumber, from, to, gro
 } 
 
 export async function getElectricUnitRates (product_code, tariff_code, from, to) {
+
+    console.log(product_code, tariff_code)
+
     const url = `https://api.octopus.energy/v1/products/${product_code}/electricity-tariffs/${tariff_code}/standard-unit-rates/?period_from=${from}&period_to=${to}`
 
     const response = await fetch(url, {
@@ -75,11 +78,13 @@ export async function getElectricUnitRates (product_code, tariff_code, from, to)
     });
 
     let data = await response.json();
+
+    console.log(data)
+
     data = data.results
 
-    data = data.filter(result => result.payment_method === 'DIRECT_DEBIT')
+    data = data?.filter(result => result.payment_method === 'DIRECT_DEBIT') || []
 
-    
     return data;
 }
 
@@ -96,7 +101,7 @@ export async function getElectricStandingCharges (product_code, tariff_code, fro
     let data = await response.json();
     data = data.results
 
-    data = data.filter(result => result.payment_method === 'DIRECT_DEBIT')
+    data = data?.filter(result => result.payment_method === 'DIRECT_DEBIT') || []
 
     return data;
 }
@@ -128,9 +133,10 @@ export async function getGasUnitRates (product_code, tariff_code, from, to) {
     });
 
     let data = await response.json();
+
     data = data.results
 
-    data = data.filter(result => result.payment_method === 'DIRECT_DEBIT')
+    data = data?.filter(result => result.payment_method === 'DIRECT_DEBIT') || []
 
     return data;
 }
@@ -148,7 +154,7 @@ export async function getGasStandingCharges (product_code, tariff_code, from, to
     let data = await response.json();
     data = data.results
 
-    data = data.filter(result => result.payment_method === 'DIRECT_DEBIT')
+    data = data?.filter(result => result.payment_method === 'DIRECT_DEBIT') || []
 
     return data;
 }

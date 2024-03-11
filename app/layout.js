@@ -1,5 +1,6 @@
 import "./globals.scss";
 import Header from "./components/Header";
+import { Providers } from "./providers";
 
 export const metadata = {
   title: "Create Next App",
@@ -8,11 +9,29 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <html lang="en">
-        <body>
+    <html lang="en" className="dark">
+      <body>
+        <div
+          className="fixed bottom-0 -left-0 z-0 w-full h-full bg-bottom bg-no-repeat bg-contain"
+          style={{
+            backgroundImage: "url(/bg-1.png)",
+            transform: "translate(-35%, 20%)",
+          }}
+        >
+        </div>
+        <div
+          className="fixed top-0 right z-0 w-full h-full bg-bottom bg-no-repeat bg-contain"
+          style={{
+            backgroundImage: "url(/bg-2.png)",
+            transform: "translate(10%, -10%)",
+          }}
+        >
+        </div>
+        <Providers>
           <Header />
           {children}
-        </body>
+        </Providers>
+      </body>
     </html>
   );
 }

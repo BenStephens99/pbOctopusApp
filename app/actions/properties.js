@@ -9,8 +9,8 @@ import { getGasStandingCharges } from "./octopus"
 
 export async function getPropertiesPage() {
     const octopusAccounts = await getOctopusAccounts();
-    
-    const lastMonth28 = new Date(new Date().getFullYear(), new Date().getMonth() -1, 28).toISOString().slice(0, 16) + 'Z';
+
+    const lastMonth28 = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 28).toISOString().slice(0, 16) + 'Z';
 
     const currentDate = new Date().toISOString().slice(0, 10) + 'T00:00Z';
 
@@ -56,28 +56,32 @@ export async function getPropertiesPage() {
             delete property.electric.unit_rates;
             delete property.electric.standing_charges;
 
-            const gasMeter = propertyInfo.gas_meter_points[0].meters[0];
-            property.gas.mprn = propertyInfo.gas_meter_points[0].mprn;
-            property.gas.serial_number = gasMeter.serial_number;
-            property.gas.tariff_code = propertyInfo.gas_meter_points[0].agreements[0].tariff_code;
+            if (propertyInfo.gas_meter_points.length != 0) {
+                const gasMeter = propertyInfo.gas_meter_points[0].meters[0];
+                property.gas.mprn = propertyInfo.gas_meter_points[0].mprn;
+                property.gas.serial_number = gasMeter.serial_number;
+                property.gas.tariff_code = propertyInfo.gas_meter_points[0].agreements[0].tariff_code;
 
-            property.gas.usage = await getGasUsage(octopusAccount.key, property.gas.mprn, property.gas.serial_number, lastMonth28, currentDate);
+                property.gas.usage = await getGasUsage(octopusAccount.key, property.gas.mprn, property.gas.serial_number, lastMonth28, currentDate);
 
-            property.gas.unit_rates = await fetchOrGetCachedData(fetchedUnitRates, `${octopusAccount.product_code}_${property.gas.tariff_code}`,
-                () => getGasUnitRates(octopusAccount.product_code, property.gas.tariff_code, lastMonth28, currentDate));
+                property.gas.unit_rates = await fetchOrGetCachedData(fetchedUnitRates, `${octopusAccount.product_code}_${property.gas.tariff_code}`,
+                    () => getGasUnitRates(octopusAccount.product_code, property.gas.tariff_code, lastMonth28, currentDate));
 
-            property.gas.standing_charges = await fetchOrGetCachedData(fetchedStandingCharges, `${octopusAccount.product_code}_${property.gas.tariff_code}`,
-                () => getGasStandingCharges(octopusAccount.product_code, property.gas.tariff_code, lastMonth28, currentDate));
+                property.gas.standing_charges = await fetchOrGetCachedData(fetchedStandingCharges, `${octopusAccount.product_code}_${property.gas.tariff_code}`,
+                    () => getGasStandingCharges(octopusAccount.product_code, property.gas.tariff_code, lastMonth28, currentDate));
 
-            property.gas.cost = calculateCost({
-                usage: property.gas.usage,
-                standing_charges: property.gas.standing_charges,
-                unit_rates: property.gas.unit_rates,
-            });
+                property.gas.cost = calculateCost({
+                    usage: property.gas.usage,
+                    standing_charges: property.gas.standing_charges,
+                    unit_rates: property.gas.unit_rates,
+                });
 
-            delete property.gas.usage;
-            delete property.gas.unit_rates;
-            delete property.gas.standing_charges;
+                delete property.gas.usage;
+                delete property.gas.unit_rates;
+                delete property.gas.standing_charges;
+            } else {
+                property.gas.cost = 0;
+            }
 
             account.properties.push(property);
         }
@@ -105,7 +109,7 @@ function calculateCost(response) {
 
     for (const usageData of response.usage) {
         const consumption = usageData.consumption;
-        const roundedConsumption = unbiasedRound(consumption, 3); 
+        const roundedConsumption = unbiasedRound(consumption, 3);
         const intervalStart = new Date(usageData.interval_start);
 
         const standingCharge = getStandingCharge(response.standing_charges, intervalStart);
@@ -136,7 +140,7 @@ function getStandingCharge(standingCharges, date) {
 
         if (validFrom <= date && date <= validTo) {
             return charge.value_exc_vat;
-        }
+        } 
     }
 }
 
