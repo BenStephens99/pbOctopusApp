@@ -1,6 +1,7 @@
 import "./globals.scss";
 import Header from "./components/Header";
 import { Providers } from "./providers";
+import { getPb } from "./actions/auth/authActions";
 
 export const metadata = {
   title: "Create Next App",
@@ -8,6 +9,12 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
+  let model = null;
+  try {
+    const pb = await getPb(); 
+    model = pb.authStore.model
+  } catch (e) {}
+
   return (
     <html lang="en" className="dark">
       <body>
@@ -16,6 +23,7 @@ export default async function RootLayout({ children }) {
           style={{
             backgroundImage: "url(/bg-1.png)",
             transform: "translate(-35%, 20%)",
+            zIndex: -1,
           }}
         >
         </div>
@@ -24,12 +32,15 @@ export default async function RootLayout({ children }) {
           style={{
             backgroundImage: "url(/bg-2.png)",
             transform: "translate(10%, -10%)",
+            zIndex: -1,
           }}
         >
         </div>
         <Providers>
-          <Header />
-          {children}
+          <div className="flex flex-col gap-4">
+            <Header model={model}/>
+            {children}
+          </div>
         </Providers>
       </body>
     </html>

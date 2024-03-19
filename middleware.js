@@ -2,9 +2,9 @@ import { isTokenExpired } from "pocketbase";
 import { NextResponse } from "next/server";
 import PocketBase from "pocketbase";
 
-const pb = new PocketBase(process.env.POCKETBASE_URL);
-
 export function middleware(request) {
+    const pb = new PocketBase(process.env.POCKETBASE_URL);
+
   const forbiddenUrls = [
       '/account',
       '/properties',

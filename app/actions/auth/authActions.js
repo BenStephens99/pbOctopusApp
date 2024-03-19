@@ -4,24 +4,17 @@ import { redirect } from 'next/navigation';
 import PocketBase from 'pocketbase';
 import { cookies } from 'next/headers';
 
-const pb = new PocketBase(process.env.POCKETBASE_URL);
-
 export async function getPb() {
-  await checkAuth();
-  return pb;
-}
-
-export async function checkAuth() {
+  const pb = new PocketBase(process.env.POCKETBASE_URL);
   try {
     const cookie = cookies().get('pb_auth');
     pb.authStore.loadFromCookie(cookie.value);
-    return pb.authStore
-  } catch (e) {
-    return null;
-  }
+  } catch (e) {}
+  return pb;
 }
 
 export async function signUp(formData) {
+  const pb = await getPb();
   
   const data = {
     email: formData.email,
@@ -35,6 +28,8 @@ export async function signUp(formData) {
 }
 
 export async function login(formData) {
+  const pb = await getPb();
+
   const email = formData.email
   const password = formData.password
   
@@ -46,6 +41,8 @@ export async function login(formData) {
   }
 
 export async function logout() {
+  const pb = await getPb();
+
   cookies().delete('pb_auth');
   pb.authStore.clear();
   redirect('/');

@@ -1,14 +1,14 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addAccount } from "@/app/actions/account";
 import { Button } from "@nextui-org/button";
 import {
-    Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Input
+    Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Input, Select, SelectItem
 } from "@nextui-org/react";
 
-export default function AddAccountModal() {
+export default function AddAccountModal(props) {
 
     const router = useRouter();
 
@@ -16,10 +16,19 @@ export default function AddAccountModal() {
 
     const [name, setName] = useState('');
     const [accountNumber, setAccountNumber] = useState('');
+    const [areaCode, setAreaCode] = useState('');
     const [apiKey, setApiKey] = useState('');
+    const [product, setProduct] = useState('');
+
+    useEffect(() => {
+        setName('');
+        setAccountNumber('');
+        setApiKey('');
+        setProduct('');
+    }, [isOpen]);
 
     const handleAddAccount = async (e) => {
-        await addAccount(name, accountNumber, apiKey);
+        await addAccount(name, accountNumber, apiKey, product, areaCode);
         onOpenChange()
         router.refresh()
     }
@@ -46,6 +55,26 @@ export default function AddAccountModal() {
                             value={apiKey}
                             onChange={(e) => setApiKey(e.target.value)}
                         />
+                        <Select
+                            label="Product"
+                            onChange={(e) => setProduct(e.target.value)}
+                        >
+                            {props.products.map((product) => (
+                                <SelectItem key={product.id} value={product.id}>
+                                    {product.name}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                        <Select
+                            label="Area"
+                            onChange={(e) => setAreaCode(e.target.value)}
+                        >
+                            {props.areaCodes.map((area) => (
+                                <SelectItem key={area.id} value={area.id}>
+                                    {area.name}
+                                </SelectItem>
+                            ))}
+                        </Select>
                     </ModalBody>
                     <ModalFooter>
                         <Button color="danger" variant="light" onPress={onOpenChange}>Close</Button>

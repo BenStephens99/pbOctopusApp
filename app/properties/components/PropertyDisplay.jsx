@@ -1,38 +1,44 @@
 'use client'
 
-import { Card, CardHeader, CardBody, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Divider } from "@nextui-org/react";
+import { calculateElectric, calculateGas } from "@/app/actions/calculations";
 
 export default function PropertyDisplay(props) {
-    const property = props.property
+    const property = props.property;
+    const account = props.account; 
 
-    console.log(property)
+    const electricCost = calculateElectric(
+        props.usage.electric,
+        account.electricStandingCharges,
+        account.electricUnitRates
+    );
+
+    const gasCost = calculateGas(
+        props.usage.gas,
+        account.gasStandingCharges,
+        account.gasUnitRates
+    );
 
     return (
-        <div>
-            <Table
-                className="text-right"
-                classNames={{
-                    wrapper: 'bg-default-100',
-                }}
-            >
-                <TableHeader>
-                    <TableColumn colSpan={2} className="bg-default">
-                        <h4 className="capitalize">{toLowerCase(property.name)}</h4>
-                    </TableColumn >
-                    <TableColumn className="bg-default"></TableColumn>
-                </TableHeader>
-                <TableBody>
-                    <TableRow>
-                        <TableCell>Gas: </TableCell>
-                        <TableCell>&pound;{property.gas.cost}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Electric</TableCell>
-                        <TableCell>&pound;{property.electric.cost}</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
-        </div>
+        <Card className="bg-default-100">
+            <CardHeader>
+                <div className="capitalize flex flex-col gap-2">
+                    <span>{toLowerCase(property.addressLine1)}</span>
+                    <span className="text-xs">{property.postcode}</span>
+                </div>
+            </CardHeader>
+            <CardBody>
+                <Divider className="mb-4" />
+                <span className="flex justify-between">
+                    <span>Electric:</span>
+                    <span>&pound;{electricCost}</span>
+                </span>
+                <span className="flex justify-between">
+                    <span>Gas:</span>
+                    <span>&pound;{gasCost}</span>
+                </span>
+            </CardBody>
+        </Card>
     );
 }
 

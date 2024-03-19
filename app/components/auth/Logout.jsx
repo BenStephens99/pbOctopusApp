@@ -1,14 +1,19 @@
 'use client'
 import { logout } from "../../actions/auth/authActions"
+import { Button } from "@nextui-org/button"
 
 export default function Logout() {
     
     const handleLogout = (e) => {
         e.preventDefault();
-        logout();
+        if (confirm('logout?')) {
+            logout();
+        }
     }
 
   return (
-    <button onClick={handleLogout}>Logout</button>
+    <Button color="primary" variant="flat" onClick={handleLogout}>
+        Logout
+    </Button>
   )
 }

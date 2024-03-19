@@ -8,11 +8,8 @@ import { Card, CardHeader, CardBody, CardFooter, Divider } from "@nextui-org/rea
 export default function Account(props) {
     const account = props.account
     const userId = props.userId
-    const products = props.products
 
-    const productName = products.find(product => product.code === account.product_code)?.display_name || 'No product'
-
-    const isAdmin = account.admins.find(admin => admin.id === userId)
+    const isAdmin = account.admins.find(admin => admin.id === userId) || false
 
     const router = useRouter()
 
@@ -31,16 +28,23 @@ export default function Account(props) {
                     <p>{account.account_number}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1">
-                    {isAdmin ? 
+                    {isAdmin ?
                         <Button color="danger" variant="flat" size="sm" onClick={handleDelete}>
                             Delete
                         </Button>
-                    : null}
-                    <p>{productName}</p>
+                        : null}
                 </div>
             </CardHeader>
             <Divider />
             <CardBody>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {account.account_numbers.map(account_number => {
+                        return (
+                            <div key={account_number.id}>{account_number.number}</div>
+                        )
+                    })}
+                </div>
+            <Divider className="mt-3 mb-3"/>
                 {account.admins.map(admin => {
                     return (
                         <PersonDisplay key={admin.id} person={admin} userId={userId} type={'admin'} />
@@ -56,7 +60,7 @@ export default function Account(props) {
                 <>
                     <Divider />
                     <CardFooter className="flex gap-2">
-                        <EditAccountModal products={products} account={account} />
+                        <EditAccountModal products={props.products} areaCodes={props.areaCodes} account={account} />
                     </CardFooter>
                 </>
                 :
@@ -70,7 +74,7 @@ function PersonDisplay(props) {
 
     const person = props.person
     const userId = props.userId
-    const type = props.type || 'user'
+    const type = props?.type || 'user'
 
     return (
         <div key={person.id} className="flex flex-col pb-3">

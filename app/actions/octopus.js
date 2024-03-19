@@ -1,5 +1,4 @@
 'use server'
-import { getAccounts } from "./account";
 
 export async function getOctopusAccount(accountNumber, apiKey) {
     const url = `https://api.octopus.energy/v1/accounts/${accountNumber}/`
@@ -16,37 +15,31 @@ export async function getOctopusAccount(accountNumber, apiKey) {
     return data;
 } 
 
-export async function getOctopusAccounts () {
-    const accounts = await getAccounts()
+export async function getOctopusAccounts (account) {
 
     let octopusAccounts = []
 
-    for (let account of accounts) {
-        const octopusAccount = await getOctopusAccount(account.account_number, account.api_key)
-        octopusAccounts.push({
-            name: account.name,
-            key: account.api_key,
-            product_code: account.product_code,
-            ...octopusAccount
-        })
+    for (let a of account.account_numbers) {
+        const octopusAccount = await getOctopusAccount(a.number, account.api_key)
+        octopusAccounts.push(octopusAccount)
     }
 
     return octopusAccounts
 }
 
-export async function getProducts () {
-    const url = `https://api.octopus.energy/v1/products/`
+// export async function getProducts () {
+//     const url = `https://api.octopus.energy/v1/products/`
 
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
+//     const response = await fetch(url, {
+//         method: 'GET',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//     });
 
-    const data = await response.json();
-    return data;
-}
+//     const data = await response.json();
+//     return data;
+// }
 
 export async function getElectricUsage(apiKey, mpan, serialNumber, from, to, group_by = 'day') {
     const url = `https://api.octopus.energy/v1/electricity-meter-points/${mpan}/meters/${serialNumber}/consumption/?period_from=${from}&period_to=${to}&order_by=period&group_by=${group_by}`
@@ -66,8 +59,6 @@ export async function getElectricUsage(apiKey, mpan, serialNumber, from, to, gro
 
 export async function getElectricUnitRates (product_code, tariff_code, from, to) {
 
-    console.log(product_code, tariff_code)
-
     const url = `https://api.octopus.energy/v1/products/${product_code}/electricity-tariffs/${tariff_code}/standard-unit-rates/?period_from=${from}&period_to=${to}`
 
     const response = await fetch(url, {
@@ -78,8 +69,6 @@ export async function getElectricUnitRates (product_code, tariff_code, from, to)
     });
 
     let data = await response.json();
-
-    console.log(data)
 
     data = data.results
 
