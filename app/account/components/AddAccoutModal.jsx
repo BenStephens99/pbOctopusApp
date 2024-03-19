@@ -9,8 +9,9 @@ import {
 } from "@nextui-org/react";
 
 export default function AddAccountModal(props) {
-
     const router = useRouter();
+
+    const [loading, setLoading] = useState(false);
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -27,10 +28,17 @@ export default function AddAccountModal(props) {
         setProduct('');
     }, [isOpen]);
 
-    const handleAddAccount = async (e) => {
-        await addAccount(name, accountNumber, apiKey, product, areaCode);
-        onOpenChange()
-        router.refresh()
+    const handleAddAccount = async () => {
+        setLoading(true);
+
+        const res = await addAccount(name, accountNumber, apiKey, product, areaCode);
+        if (res !== 'error') {
+            onOpenChange()
+            router.refresh()
+        } else {
+            setLoading(false)
+            console.log('error')
+        }
     }
 
     return (
@@ -78,7 +86,7 @@ export default function AddAccountModal(props) {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="danger" variant="light" onPress={onOpenChange}>Close</Button>
-                        <Button color="primary" onPress={handleAddAccount}>Save</Button>
+                        <Button isLoading={loading} color="primary" onPress={handleAddAccount}>Save</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

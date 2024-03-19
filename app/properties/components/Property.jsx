@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import PropertyDisplay from "./PropertyDisplay"
 import { getElectricUsage, getGasUsage } from "@/app/actions/octopus";
 

@@ -24,7 +24,7 @@ export function middleware(request) {
       } else {
         pb.authStore.loadFromCookie(authCookie.value);
       }
-
+      
       const token = pb.authStore.token;
 
       if (!token || isTokenExpired(token)) {

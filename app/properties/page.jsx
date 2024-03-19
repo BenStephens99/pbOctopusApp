@@ -2,14 +2,13 @@ export const revalidate = 3600;
 import { Card, CardHeader, CardBody, CardFooter, Divider } from "@nextui-org/react";
 import { getAccountsWithData } from "../actions/account";
 import { getProperties } from "../actions/properties";
-import Test from "./Test";
 import Property from "./components/Property";
+
 import { getElectricUnitRates, getElectricStandingCharges, getGasStandingCharges, getGasUnitRates } from "../actions/octopus";
 
 export default async function Properties() {
 
     const accounts = await getAccountsWithData();
-    
     
     const dateFrom = new Date();
     dateFrom.setHours(0, 0, 0, 0);
@@ -63,7 +62,6 @@ export default async function Properties() {
                     return (
                         <Card key={index} className="p-0">
                             <CardHeader>
-                                <Test account={account} />
                                 <div className="flex flex-col gap-2">
                                     <h1>{account.name}</h1>
                                 </div>
@@ -81,7 +79,6 @@ export default async function Properties() {
                     );
                 })}
             </div>
-            <Test accounts={accounts} />
         </div>
     );
 }

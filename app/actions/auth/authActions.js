@@ -14,21 +14,27 @@ export async function getPb() {
 }
 
 export async function signUp(formData) {
-  const pb = await getPb();
+  const pb = new PocketBase(process.env.POCKETBASE_URL);
   
   const data = {
+    name: formData.name,
     email: formData.email,
     password: formData.password,
-    passwordConfirm: formData.password,
+    passwordConfirm: formData.passwordConfirm,
   }
 
-  await pb.collection('users').create(data);
+  try {
+    await pb.collection('users').create(data);
+  } catch (e) {
+    console.log(e);
+    return e.data.message;
+  }
 
   await login({ email: data.email, password: data.password });
 }
 
 export async function login(formData) {
-  const pb = await getPb();
+  const pb = new PocketBase(process.env.POCKETBASE_URL);
 
   const email = formData.email
   const password = formData.password

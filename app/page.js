@@ -13,18 +13,13 @@ export default async function Home() {
 
   return (
     <>
-      <main>
-        <div className="flex justify-center">
-          {model ?
-            <Logout />
-            :
-            <div className="">
-              <Login />
-              <SignUp />
-            </div>
-          }
-        </div>
-      </main>
+      <div className="w-full max-w-96 mx-auto">
+        {model ?
+          <Logout />
+          :
+          <Login />
+        }
+      </div>
     </>
   );
 }

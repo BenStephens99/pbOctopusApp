@@ -40,18 +40,23 @@ export async function getAccountsWithData() {
 export async function addAccount(name, account_number, api_key, product_code, area_code) {
     const pb = await getPb()
 
-    const accountNumber = await addAccountNumber(account_number)
-
-    const res = await pb.collection('accounts').create({
-        name,
-        account_numbers: [accountNumber.id],
-        api_key,
-        product_code,
-        area_code,
-        admins: [pb.authStore.model.id]
-    })
-
-    return res
+    try {
+        const accountNumber = await addAccountNumber(account_number)
+    
+        const res = await pb.collection('accounts').create({
+            name,
+            account_numbers: [accountNumber.id],
+            api_key,
+            product_code,
+            area_code,
+            admins: [pb.authStore.model.id]
+        })
+    
+        return res
+    } catch (e) {
+        console.log(e)
+        return 'error'
+    }
 }
 
 export async function deleteAccount(id) {

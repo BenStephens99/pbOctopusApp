@@ -1,3 +1,5 @@
+export const revalidate = 0;
+
 import AddAccountModal from "./components/AddAccoutModal";
 import { getAccountsWithData } from "../actions/account";
 import AccountDisplay from "./components/AccountDisplay";

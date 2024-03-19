@@ -67,11 +67,18 @@ export default function Header(props) {
           </NavbarContent>
         </>
         :
-        <NavbarItem isActive={pathname === '/'}>
-          <Link color="foreground" href="/">
-            Login
-          </Link>
-        </NavbarItem>
+        <NavbarContent>
+          <NavbarItem isActive={pathname === '/'}>
+            <Link color="foreground" href="/">
+              Login
+            </Link>
+          </NavbarItem>
+          <NavbarItem isActive={pathname === '/register'}>
+            <Link color="foreground" href="/register">
+              Register
+            </Link>
+          </NavbarItem>
+        </NavbarContent>
       }
     </Navbar>
   );
