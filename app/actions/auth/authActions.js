@@ -26,7 +26,7 @@ export async function signUp(formData) {
   try {
     await pb.collection('users').create(data);
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return e.data.message;
   }
 

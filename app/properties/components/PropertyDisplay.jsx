@@ -13,11 +13,13 @@ export default function PropertyDisplay(props) {
         account.electricUnitRates
     );
 
+
     const gasCost = calculateGas(
         props.usage.gas,
         account.gasStandingCharges,
         account.gasUnitRates
     );
+
 
     return (
         <Card className="bg-default-100">

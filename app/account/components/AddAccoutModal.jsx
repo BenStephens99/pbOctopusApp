@@ -37,7 +37,7 @@ export default function AddAccountModal(props) {
             router.refresh()
         } else {
             setLoading(false)
-            console.log('error')
+            console.error('error')
         }
     }
 

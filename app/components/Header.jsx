@@ -18,9 +18,7 @@ export default function Header(props) {
   let model = props.model;
 
   const pathname = usePathname();
-
-  console.log(pathname);
-
+  
   return (
     <Navbar maxWidth="full" isBlurred isBordered
       classNames={{

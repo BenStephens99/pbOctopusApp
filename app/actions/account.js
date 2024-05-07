@@ -54,7 +54,7 @@ export async function addAccount(name, account_number, api_key, product_code, ar
     
         return res
     } catch (e) {
-        console.log(e)
+        console.error(e)
         return 'error'
     }
 }
