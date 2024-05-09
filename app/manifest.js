@@ -5,8 +5,8 @@ export default function manifest() {
     description: 'Energy App',
     start_url: '/properties',
     display: 'standalone',
-    background_color: '#fff',
-    theme_color: '#fff',
+    background_color: '#000',
+    theme_color: '#000',
     icons: [
       {
         src: '/favicon.ico',
