@@ -57,17 +57,17 @@ export default async function Properties() {
 
     return (
         <div>
-            <div className="block sm:flex flex-wrap gap-4">
+            <div className="sm:flex flex-wrap gap-4">
                 {accounts.map((account, index) => {
                     return (
-                        <Card key={index} className="p-0">
+                        <Card key={index} className="p-0 mt-4 sm:mt-0">
                             <CardHeader>
                                 <div className="flex flex-col gap-2">
                                     <h1>{account.name}</h1>
                                 </div>
                             </CardHeader>
                             <CardBody>
-                                <div className="block sm:flex gap-4 flex-wrap">
+                                <div className="flex gap-4 flex-wrap h-full">
                                     {account.properties.map((property, index) => {
                                         return (
                                             <Property key={index} period={period} account={account} property={property} />

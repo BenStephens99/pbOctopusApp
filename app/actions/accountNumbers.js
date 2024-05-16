@@ -3,10 +3,10 @@
 import { getPb } from "./auth/authActions";
 
 export async function getAccountNumbers([ids]) {
+    if (!ids.length) return []
+
     const pb = await getPb()
 
-
-    //ids to array id = [1,2,3]
     let filter = ids.map(id => {
         return `id = "${id}"`
     })
@@ -19,6 +19,16 @@ export async function getAccountNumbers([ids]) {
     });
 
     return records.items || [];
+}
+
+export async function updateAccountNumber(id, account_number) {
+    const pb = await getPb()
+
+    const res = await pb.collection('account_numbers').update(id, {
+        number: account_number
+    })
+
+    return res
 }
 
 export async function getAccountNumber (id) {

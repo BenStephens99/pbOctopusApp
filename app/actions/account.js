@@ -4,7 +4,7 @@ import { getPb } from "./auth/authActions"
 import { getUsers } from "./users";
 import { getAccountNumbers } from "./accountNumbers";
 import { getOctopusAccounts } from "./octopus";
-import { addAccountNumber } from "./accountNumbers";
+import { addAccountNumber, updateAccountNumber } from "./accountNumbers";
 import { getAreaCode } from "./areaCodes";
 import { getProduct } from "./products";
 
@@ -67,12 +67,25 @@ export async function deleteAccount(id) {
     return res
 }
 
-export async function updateAccount(id, name, account_numbers, api_key, product_code, area_code, admins, users) {
+export async function updateAccount(id, name, account_numbers, account_numbers_to_delete, api_key, product_code, area_code, admins, users) {
     const pb = await getPb()
+
+    for (const account_number of account_numbers_to_delete) {
+        await pb.collection('account_numbers').delete(account_number)
+    }
+
+    for (const account_number of account_numbers) {
+        if (account_number.id.startsWith('new')) {
+            const res = await addAccountNumber(account_number.number)
+            account_number.id = res.id
+        } else {
+            await updateAccountNumber(account_number.id, account_number.number)
+        }
+    }
 
     const res = await pb.collection('accounts').update(id, {
         name,
-        account_numbers,
+        account_numbers: account_numbers.map(account_number => account_number.id),
         api_key,
         product_code,
         area_code,

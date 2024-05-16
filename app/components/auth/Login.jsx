@@ -35,7 +35,7 @@ export default function Login() {
             </CardHeader>
             <Divider />
             <CardBody>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4">
                     <Input
                         label="Email"
                         type="email"
@@ -48,17 +48,17 @@ export default function Login() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <Button isLoading={loading} type="submit" color="primary" className="ml-auto">Login</Button>
-                    {errorMessage && <p>{errorMessage}</p>}
-                </form>
+                    <p className=" text-red-500">{errorMessage}</p>
+                </div>
             </CardBody>
             <Divider />
             <CardFooter>
-                <Button type="submit">
+                <Button>
                     <Link href="/register">
                         Sign Up
                     </Link>
                 </Button>
+                <Button isLoading={loading} onClick={handleSubmit} color="primary" className="ml-auto">Login</Button>
             </CardFooter>
         </Card>
     );

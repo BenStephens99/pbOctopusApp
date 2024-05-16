@@ -12,22 +12,22 @@ export default async function Property(props) {
         gas: [],
     }
 
-    if (property.mpan && property.electricSerialNumber) {
+    if (property.mpan && property.electricSerialNumbers?.length) {
         usage.electric = await getElectricUsage(
             account.api_key,
             property.mpan,
-            property.electricSerialNumber,
+            property.electricSerialNumbers,
             props.period.dateFrom,
             props.period.dateTo,
             'day'
         );
     }
 
-    if (property.mprn && property.gasSerialNumber) {
+    if (property.mprn && property.gasSerialNumbers?.length) {
         usage.gas = await getGasUsage(
             account.api_key,
             property.mprn,
-            property.gasSerialNumber,
+            property.gasSerialNumbers,
             props.period.dateFrom,
             props.period.dateTo,
             'day'

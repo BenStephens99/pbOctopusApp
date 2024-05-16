@@ -13,7 +13,6 @@ export default function PropertyDisplay(props) {
         account.electricUnitRates
     );
 
-
     const gasCost = calculateGas(
         props.usage.gas,
         account.gasStandingCharges,
@@ -22,22 +21,23 @@ export default function PropertyDisplay(props) {
 
 
     return (
-        <Card className="bg-default-100">
+        <Card className="bg-default-100 w-full max-w-full sm:w-60">
             <CardHeader>
                 <div className="capitalize flex flex-col gap-2">
+                    <span className="text-xs">{property.accountNumber}</span>
                     <span>{toLowerCase(property.addressLine1)}</span>
                     <span className="text-xs">{property.postcode}</span>
                 </div>
             </CardHeader>
-            <CardBody>
+            <CardBody className="justify-end">
                 <Divider className="mb-4" />
                 <span className="flex justify-between">
                     <span>Electric:</span>
-                    <span>&pound;{electricCost}</span>
+                    <span className="text-green-400">&pound;{electricCost}</span>
                 </span>
                 <span className="flex justify-between">
                     <span>Gas:</span>
-                    <span>&pound;{gasCost}</span>
+                    <span className="text-blue-400">&pound;{gasCost}</span>
                 </span>
             </CardBody>
         </Card>
