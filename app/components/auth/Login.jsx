@@ -29,37 +29,39 @@ export default function Login() {
     };
 
     return (
-        <Card className="w-full">
-            <CardHeader>
-                <h2>Login</h2>
-            </CardHeader>
-            <Divider />
-            <CardBody>
-                <div className="flex flex-col gap-4">
-                    <Input
-                        label="Email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <Input
-                        label="Password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <p className=" text-red-500">{errorMessage}</p>
-                </div>
-            </CardBody>
-            <Divider />
-            <CardFooter>
-                <Button>
-                    <Link href="/register">
-                        Sign Up
-                    </Link>
-                </Button>
-                <Button isLoading={loading} onClick={handleSubmit} color="primary" className="ml-auto">Login</Button>
-            </CardFooter>
-        </Card>
+        <form onSubmit={handleSubmit}>
+            <Card className="w-full">
+                <CardHeader>
+                    <h2>Login</h2>
+                </CardHeader>
+                <Divider />
+                <CardBody>
+                    <div className="flex flex-col gap-4">
+                        <Input
+                            label="Email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <Input
+                            label="Password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <p className=" text-red-500">{errorMessage}</p>
+                    </div>
+                </CardBody>
+                <Divider />
+                <CardFooter>
+                    <Button>
+                        <Link href="/register">
+                            Sign Up
+                        </Link>
+                    </Button>
+                    <Button isLoading={loading} type="submit" color="primary" className="ml-auto">Login</Button>
+                </CardFooter>
+            </Card>
+        </form>
     );
 }
