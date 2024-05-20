@@ -56,7 +56,7 @@ export async function getElectricUsage(apiKey, mpan, serialNumbers, from, to, gr
 
         const data = await response.json();
 
-        if (data.results.length) {
+        if (data.results?.length) {
             return data.results;
         }
     }

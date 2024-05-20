@@ -1,7 +1,8 @@
 'use client'
 
-import { Card, CardHeader, CardBody, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Divider } from "@nextui-org/react";
-import { calculateElectric, calculateGas } from "@/app/actions/calculations";
+import { Card, CardHeader, CardBody, CardFooter, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Divider } from "@nextui-org/react";
+import { calculateElectric, calculateGas, add } from "@/app/actions/calculations";
+
 
 export default function PropertyDisplay(props) {
     let property = props.property;
@@ -11,7 +12,15 @@ export default function PropertyDisplay(props) {
         usage: {
             electric: props.usage.electric,
             gas: props.usage.gas,
-        }
+        },
+        electric: {
+            unitRates: props.account.electricUnitRates,
+            standingCharges: props.account.electricStandingCharges,
+        },
+        gas: {
+            unitRates: props.account.gasUnitRates,
+            standingCharges: props.account.gasStandingCharges,
+        },
     }
 
     const account = props.account; 
@@ -38,11 +47,11 @@ export default function PropertyDisplay(props) {
                 <CardHeader>
                     <div className="capitalize flex flex-col gap-2">
                         <span className="text-xs">{property.accountNumber}</span>
-                        <span>{toLowerCase(property.addressLine1)}</span>
+                        <span>{property.addressLine1.toLowerCase()}</span>
                         <span className="text-xs">{property.postcode}</span>
                     </div>
                 </CardHeader>
-                <CardBody className="justify-end">
+                <CardBody className="justify-end pt-0">
                     <Divider className="mb-4" />
                     <span className="flex justify-between">
                         <span>Electric:</span>
@@ -53,11 +62,14 @@ export default function PropertyDisplay(props) {
                         <span className="text-blue-400">&pound;{gasCost}</span>
                     </span>
                 </CardBody>
+                <CardFooter className="flex-col justify-end pt-0">
+                    <Divider className="mb-4" />
+                    <div className="flex justify-between w-full">
+                        <span>Total:</span>
+                        <span>&pound;{add(electricCost, gasCost)}</span>
+                    </div>
+                </CardFooter>
             </Card>
         </a>
     );
 }
-
-function toLowerCase(str) {
-    return str.toLowerCase();
-}   

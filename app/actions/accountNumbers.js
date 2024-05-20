@@ -15,7 +15,7 @@ export async function getAccountNumbers([ids]) {
 
 
     const records = await pb.collection('account_numbers').getList(1, 50, {
-        filter : `${filter}`
+        filter: `${filter}`
     });
 
     return records.items || [];

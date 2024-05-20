@@ -1,4 +1,4 @@
-export const revalidate = 3600;
+export const revalidate = 0;
 import { Card, CardHeader, CardBody, CardFooter, Divider } from "@nextui-org/react";
 import { getAccountsWithData } from "../actions/account";
 import { getProperties } from "../actions/properties";

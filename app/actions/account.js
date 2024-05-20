@@ -37,6 +37,17 @@ export async function getAccountsWithData() {
     return records;
 }
 
+export async function getAccount(id) {
+    const pb = await getPb();
+
+    const record = await pb.collection('accounts').getOne(id);
+
+    record.area_code = await getAreaCode(record.area_code);
+    record.product_code = await getProduct(record.product_code);
+
+    return record;
+}
+
 export async function addAccount(name, account_number, api_key, product_code, area_code) {
     const pb = await getPb()
 
