@@ -14,12 +14,14 @@ export default function UsageChart(props) {
     function createData(usage, unitRates, standingCharges) {
         let dataToCreate = [];
 
-        for (const label of labels) {
+        console.log(usage)
+
+        for (let i = 0; i < labels.length; i++) {
             switch (props.view.period) {
                 case 'day':
-                    let usageData = (usage.find(data => data.interval_start.split('T')[0] === label))?.consumption || 0;
-                    let unitRate = getUnitRate(unitRates, label);
-                    let standingCharge = getStandingCharge(standingCharges, label);
+                    let usageData = (usage.find(data => data.interval_start.split('T')[0] === labels[i]))?.consumption || 0;
+                    let unitRate = getUnitRate(unitRates, labels[i]);
+                    let standingCharge = getStandingCharge(standingCharges, labels[i]);
 
                     let dailyCost = (add(usageData * unitRate, standingCharge) / 100).toFixed(2);
 
@@ -29,27 +31,33 @@ export default function UsageChart(props) {
                     // Handle week case
                     break;
                 case 'month':
-                    let start = new Date(label);
+                    let start = new Date(labels[i]);
                     let end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
 
                     let monthlyUsage = 0;
 
-                    for (const data of usage) {
-                        let dataDate = new Date(data.interval_start);
-                        if (dataDate >= start && dataDate <= end) {
-                            monthlyUsage += data.consumption;
+                    const monthData = usage.find(data => data.interval_start.slice(0, 7) === labels[i]);
+
+                    if (monthData) {
+                        monthlyUsage = monthData.consumption;
+                            
+                        let monthlyUnitRate = getUnitRate(unitRates, labels[i]);
+
+                        let monthlyStandingCharge = getStandingCharge(standingCharges, labels[i]);
+
+                        if (i !== labels.length - 1) {
+                            monthlyStandingCharge = monthlyStandingCharge * (end.getDate() - start.getDate() + 1);
+                        } else {
+                            monthlyStandingCharge = monthlyStandingCharge * (new Date().getDate() - start.getDate() + 1);
                         }
+                        
+                        const monthlyCost = (add(monthlyUsage * monthlyUnitRate, monthlyStandingCharge) / 100).toFixed(2);
+
+                        dataToCreate.push(monthlyCost);
+                    } else {
+                        dataToCreate.push(0);
                     }
 
-                    let monthlyUnitRate = getUnitRate(unitRates, label);
-
-                    let monthlyStandingCharge = getStandingCharge(standingCharges, label);
-
-                    monthlyStandingCharge = monthlyStandingCharge * (end.getDate() - start.getDate() + 1);
-
-                    let monthlyCost = (add(monthlyUsage * monthlyUnitRate, monthlyStandingCharge) / 100).toFixed(2);
-
-                    dataToCreate.push(monthlyCost);
                     break;
                 case 'year':
                     // Handle year case
@@ -75,14 +83,28 @@ export default function UsageChart(props) {
                 // Handle week case
                 break;
             case 'month':
-                let start = new Date(startDate);
-                let end = new Date(endDate);
-                let current = new Date(start.getFullYear(), start.getMonth(), 1);
+                let start = startDate.slice(0, 7);
+                let end = endDate.slice(0, 7);
+                let current = start;
 
                 while (current <= end) {
-                    labelsToCreate.push(current.toISOString().split('T')[0].slice(0, 7));
-                    current.setMonth(current.getMonth() + 1);
+                    labelsToCreate.push(current);
+                    let year = current.split('-')[0];
+                    let month = current.split('-')[1];
+                    
+                    year = parseInt(year);
+                    month = parseInt(month);
+
+                    month++;
+
+                    if (month > 12) {
+                        month = 1;
+                        year++;
+                    }
+
+                    current = `${year}-${month.toString().padStart(2, '0')}`
                 }
+                   
                 break;
             case 'year':
                 // Handle year case
@@ -90,6 +112,7 @@ export default function UsageChart(props) {
             default:
                 break;
         }
+
 
         return labelsToCreate;
     }

@@ -169,7 +169,8 @@ export default function Page({ params }) {
                             <UsageChart
                                 property={property}
                                 view={views[view]}
-                            /> :
+                            /> 
+                            :
                             <Loading />
                         }
                     </CardBody>
