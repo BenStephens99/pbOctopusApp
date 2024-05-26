@@ -116,7 +116,7 @@ export async function getGasUsage(apiKey, mprn, serialNumbers, from, to, group_b
 
         const data = await response.json();
 
-        if (data.results.length) {
+        if (data.results?.length) {
             return data.results
         }
     }

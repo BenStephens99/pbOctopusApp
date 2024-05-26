@@ -54,6 +54,11 @@ export default function Header(props) {
                 Properties
               </Link>
             </NavbarItem>
+            <NavbarItem isActive={pathname === '/dashboard'}>
+              <Link color="foreground" href="/dashboard">
+                Dashboard
+              </Link>
+            </NavbarItem>
           </NavbarContent>
           <NavbarContent justify="end">
             <NavbarItem>

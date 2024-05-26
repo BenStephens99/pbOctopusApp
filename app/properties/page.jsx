@@ -67,6 +67,7 @@ export default async function Properties() {
                                     <h1>{account.name}</h1>
                                 </div>
                             </CardHeader>
+                            <Divider />
                             <CardBody>
                                 <div className="flex gap-4 flex-wrap h-full">
                                     {account.properties.map((property, index) => {

@@ -14,8 +14,6 @@ export default function UsageChart(props) {
     function createData(usage, unitRates, standingCharges) {
         let dataToCreate = [];
 
-        console.log(usage)
-
         for (let i = 0; i < labels.length; i++) {
             switch (props.view.period) {
                 case 'day':
