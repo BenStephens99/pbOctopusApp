@@ -2,6 +2,7 @@ import "./globals.scss";
 import Header from "./components/Header";
 import { Providers } from "./providers";
 import { getPb } from "./actions/auth/authActions";
+import { getInvitations } from "./actions/invitations";
 
 export const metadata = {
   title: "Create Next App",
@@ -10,11 +11,20 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   let model = null;
+  let invitations = [];
+
   try {
     const pb = await getPb(); 
     model = pb.authStore.model
   } catch (e) {}
 
+  if (model) {
+    try {
+      invitations = await getInvitations();
+    } catch (e) {
+      console.error(e);
+    }
+  }
   return (
     <html lang="en" className="dark">
       <body>
@@ -38,7 +48,7 @@ export default async function RootLayout({ children }) {
         </div>
         <Providers>
           <div className="flex flex-col gap-4">
-            <Header model={model}/>
+            <Header model={model} invitations={invitations}/>
             {children}
           </div>
         </Providers>

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import EditAccountModal from "./EditAccountModal"
 import { Button } from "@nextui-org/button"
 import { Card, CardHeader, CardBody, CardFooter, Divider } from "@nextui-org/react";
+import InviteUserModal from "./InviteUserModal"
 
 export default function Account(props) {
     const account = props.account
@@ -60,6 +61,7 @@ export default function Account(props) {
                 <>
                     <Divider />
                     <CardFooter className="flex gap-2">
+                        <InviteUserModal account={account} />
                         <EditAccountModal products={props.products} areaCodes={props.areaCodes} account={account} />
                     </CardFooter>
                 </>

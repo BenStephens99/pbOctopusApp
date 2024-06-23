@@ -123,7 +123,7 @@ export default function EditAccountModal(props) {
                                                                     </span>
                                                                 </Tooltip>
                                                             }
-                                                            <Tooltip color="danger" content="Remove user">
+                                                            <Tooltip color="danger" content="Remove Account Number">
                                                                 <span className="text-lg text-danger cursor-pointer active:opacity-50">
                                                                     <MdDelete onClick={() => handleRemoveAccount(accountNumber.id)} />
                                                                 </span>

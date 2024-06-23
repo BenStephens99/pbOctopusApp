@@ -7,6 +7,7 @@ import { getOctopusAccounts } from "./octopus";
 import { addAccountNumber, updateAccountNumber } from "./accountNumbers";
 import { getAreaCode } from "./areaCodes";
 import { getProduct } from "./products";
+import { getAccountInvitations } from "./invitations";
 
 export async function getAccounts() {
     const pb = await getPb();
@@ -32,6 +33,7 @@ export async function getAccountsWithData() {
         account.octopus = await getOctopusAccounts(account);
         account.area_code = await getAreaCode(account.area_code);
         account.product_code = await getProduct(account.product_code);
+        account.invitations = await getAccountInvitations(account.id);
     }
 
     return records;

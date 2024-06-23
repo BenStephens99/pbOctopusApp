@@ -243,9 +243,6 @@ async function getData(account, p, setLoading) {
         updatedAccount.totals.electric += parseFloat(property.usage.totals.electric);
         updatedAccount.totals.gas += parseFloat(property.usage.totals.gas);
     }
-
-    console.log(updatedAccount);
-
     setLoading(false);
 
     return updatedAccount;
