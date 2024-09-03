@@ -85,7 +85,11 @@ export default function EditAccountModal(props) {
     return (
         <>
             <Button color="primary" className="ml-auto" variant="ghost" onPress={onOpen}>Edit</Button>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <Modal isOpen={isOpen} 
+                onOpenChange={onOpenChange} 
+                scrollBehavior='inside'
+                placement="center"
+            >
                 <ModalContent>
                     {(onClose) => (
                         <>
