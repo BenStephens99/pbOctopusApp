@@ -2,7 +2,6 @@
 import { getOctopusAccount } from "./octopus"
 
 export async function getProperties (account) {
-    
     let properties = []
 
     if (account.octopus?.length) {
@@ -32,6 +31,16 @@ export async function getProperties (account) {
             }
         }
     }
+
+    properties.sort((a, b) => {
+        if (a.addressLine1 < b.addressLine1) {
+            return -1
+        }
+        if (a.addressLine1 > b.addressLine1) {
+            return 1
+        }
+        return 0
+    })
 
     return properties;
 }
