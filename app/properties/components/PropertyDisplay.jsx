@@ -42,8 +42,8 @@ export default function PropertyDisplay(props) {
     }
 
     return (
-        <a href={`/properties/${account.id}?postcode=${property.postcode.replace(/\s/g, '')}`} className="w-full max-w-full duration-250 sm:w-[265px] hover:brightness-90">
-            <Card className="bg-default-100">
+        <a href={`/properties/${account.id}?postcode=${property.postcode.replace(/\s/g, '')}`} className="w-full duration-25 hover:brightness-90">
+            <Card className="bg-default-100 h-full w-full">
                 <CardHeader>
                     <div className="capitalize flex flex-col gap-2">
                         <span className="text-xs">{property.accountNumber}</span>
