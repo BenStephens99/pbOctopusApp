@@ -30,6 +30,20 @@ export default function DashboardAccount(props) {
   const [customToDate, setCustomToDate] = useState(null);
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleResize = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+
+      handleResize();
+      window.addEventListener('resize', handleResize);
+      
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -72,7 +86,7 @@ export default function DashboardAccount(props) {
       <CardHeader className="flex flex-col gap-2 w-full">
         <div className="flex gap-2 justify-between flex-wrap w-full">
           <h2>{account.name}</h2>
-          <Tabs variant="bordered" selectedKey={period} onSelectionChange={setPeriod} isVertical={window.innerWidth < 768}>
+          <Tabs variant="bordered" selectedKey={period} onSelectionChange={setPeriod} isVertical={isMobile}>
             {Object.keys(periods).map((key) => (
               <Tab key={key} title={periods[key].name} />
             ))}
