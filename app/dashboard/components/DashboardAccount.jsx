@@ -72,7 +72,7 @@ export default function DashboardAccount(props) {
       <CardHeader className="flex flex-col gap-2 w-full">
         <div className="flex gap-2 justify-between flex-wrap w-full">
           <h2>{account.name}</h2>
-          <Tabs variant="bordered" selectedKey={period} onSelectionChange={setPeriod}>
+          <Tabs variant="bordered" selectedKey={period} onSelectionChange={setPeriod} isVertical={window.innerWidth < 768}>
             {Object.keys(periods).map((key) => (
               <Tab key={key} title={periods[key].name} />
             ))}
@@ -82,16 +82,16 @@ export default function DashboardAccount(props) {
           {period === 'custom' && (
             <div className="flex gap-2">
               <DatePicker
-              value={customFromDate}
-              onChange={(date) => setCustomFromDate(date)}
-              label="From"
-            />
-            <DatePicker
-              value={customToDate}
-              onChange={(date) => setCustomToDate(date)}
-              label="To"
-            />
-          </div>
+                value={customFromDate}
+                onChange={(date) => setCustomFromDate(date)}
+                label="From"
+              />
+              <DatePicker
+                value={customToDate}
+                onChange={(date) => setCustomToDate(date)}
+                label="To"
+              />
+            </div>
           )}
         </div>
       </CardHeader>
@@ -100,9 +100,9 @@ export default function DashboardAccount(props) {
         <div className="flex justify-between gap-6">
           <div>Electric:</div>
           <div className="text-green-400 flex items-center">
-            {period === 'custom' && (!customFromDate || !customToDate) ? 
-              '' 
-              : 
+            {period === 'custom' && (!customFromDate || !customToDate) ?
+              ''
+              :
               loading ? <Spinner size="sm" /> : '£' + account.totals?.electric.toFixed(2)
             }
           </div>
@@ -110,9 +110,9 @@ export default function DashboardAccount(props) {
         <div className="flex justify-between gap-6">
           <div>Gas:</div>
           <div className="text-blue-400 flex items-center">
-            {period === 'custom' && (!customFromDate || !customToDate) ? 
-              '' 
-              : 
+            {period === 'custom' && (!customFromDate || !customToDate) ?
+              ''
+              :
               loading ? <Spinner size="sm" /> : '£' + account.totals?.gas.toFixed(2)
             }
           </div>
@@ -120,9 +120,9 @@ export default function DashboardAccount(props) {
         <div className="flex justify-between gap-6 mt-2">
           <div>Total:</div>
           <div className="flex items-center">
-            {period === 'custom' && (!customFromDate || !customToDate) ? 
-              '' 
-              : 
+            {period === 'custom' && (!customFromDate || !customToDate) ?
+              ''
+              :
               loading ? <Spinner size="sm" /> : '£' + add(account.totals?.electric, account.totals?.gas)
             }
           </div>
@@ -130,9 +130,9 @@ export default function DashboardAccount(props) {
         <Divider className="mt-3" />
 
         <div className="h-64 w-64 mx-auto flex justify-center items-center">
-          {period === 'custom' && (!customFromDate || !customToDate) ? 
-            'Select a from and to date' 
-            : 
+          {period === 'custom' && (!customFromDate || !customToDate) ?
+            'Select a from and to date'
+            :
             loading ? <Spinner /> : <canvas ref={chartRef} width="400" height="400"></canvas>
           }
         </div>
