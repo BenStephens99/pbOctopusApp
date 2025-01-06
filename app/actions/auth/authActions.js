@@ -15,13 +15,13 @@ export async function getPb() {
 
 export async function signUp(formData) {
   const pb = new PocketBase(process.env.POCKETBASE_URL);
-  
+
   const data = {
     name: formData.name,
     email: formData.email,
     password: formData.password,
     passwordConfirm: formData.passwordConfirm,
-  }
+  };
 
   try {
     await pb.collection('users').create(data);
@@ -36,15 +36,15 @@ export async function signUp(formData) {
 export async function login(formData) {
   const pb = new PocketBase(process.env.POCKETBASE_URL);
 
-  const email = formData.email
-  const password = formData.password
-  
-    await pb.collection('users').authWithPassword(email, password);
+  const email = formData.email;
+  const password = formData.password;
 
-    cookies().set("pb_auth", pb.authStore.exportToCookie());
+  await pb.collection('users').authWithPassword(email, password);
 
-    redirect('/properties');
-  }
+  cookies().set('pb_auth', pb.authStore.exportToCookie());
+
+  redirect('/properties');
+}
 
 export async function logout() {
   const pb = await getPb();

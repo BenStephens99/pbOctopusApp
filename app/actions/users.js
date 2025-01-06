@@ -1,27 +1,27 @@
-'use server'
+'use server';
 
-import { getPb } from "./auth/authActions"
+import { getPb } from './auth/authActions';
 
-export async function getUser (id) {
-    const pb = await getPb()
+export async function getUser(id) {
+  const pb = await getPb();
 
-    const res = await pb.collection('users').getOne(id)
+  const res = await pb.collection('users').getOne(id);
 
-    return res
+  return res;
 }
 
-export async function getUsers (ids) {
-    const pb = await getPb()
+export async function getUsers(ids) {
+  const pb = await getPb();
 
-    let q = ids.map(id => {
-        return `id = "${id}"`
-    })
+  let q = ids.map((id) => {
+    return `id = "${id}"`;
+  });
 
-    q = q.join(' || ')
+  q = q.join(' || ');
 
-    const res = await pb.collection('users').getList(1, 50, {
-        filter :  `id = "" ${q.length ? `|| ${q}` : '' }`
-    })  
+  const res = await pb.collection('users').getList(1, 50, {
+    filter: `id = "" ${q.length ? `|| ${q}` : ''}`,
+  });
 
-    return res.items || []
+  return res.items || [];
 }

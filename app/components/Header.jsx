@@ -1,44 +1,41 @@
-'use client'
+'use client';
 
-import Logout from "./auth/Logout";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import UserInvites from "../account/components/UserInvites";
+import Logout from './auth/Logout';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import UserInvites from '../account/components/UserInvites';
 
-import {
-  Navbar,
-  NavbarContent,
-  NavbarItem,
-} from "@nextui-org/react";
+import { Navbar, NavbarContent, NavbarItem } from '@nextui-org/react';
 
 export default function Header(props) {
   let model = props.model;
 
   const pathname = usePathname();
-  
+
   return (
-    <Navbar maxWidth="full" isBlurred isBordered
+    <Navbar
+      maxWidth="full"
+      isBlurred
+      isBordered
       classNames={{
-        wrapper: [
-          "px-0"
-        ],
+        wrapper: ['px-0'],
         item: [
-          "flex",
-          "relative",
-          "h-full",
-          "items-center",
+          'flex',
+          'relative',
+          'h-full',
+          'items-center',
           "data-[active=true]:after:content-['']",
-          "data-[active=true]:after:absolute",
-          "data-[active=true]:after:bottom-0",
-          "data-[active=true]:after:left-0",
-          "data-[active=true]:after:right-0",
-          "data-[active=true]:after:h-[2px]",
-          "data-[active=true]:after:rounded-[2px]",
-          "data-[active=true]:after:bg-primary",
+          'data-[active=true]:after:absolute',
+          'data-[active=true]:after:bottom-0',
+          'data-[active=true]:after:left-0',
+          'data-[active=true]:after:right-0',
+          'data-[active=true]:after:h-[2px]',
+          'data-[active=true]:after:rounded-[2px]',
+          'data-[active=true]:after:bg-primary',
         ],
       }}
     >
-      {model ?
+      {model ? (
         <>
           <NavbarContent className="flex gap-4">
             <NavbarItem isActive={pathname === '/account'}>
@@ -62,7 +59,7 @@ export default function Header(props) {
               <p className="hidden sm:block">{model.email}</p>
             </NavbarItem>
             <NavbarItem>
-              <UserInvites invitations={props.invitations}/>
+              <UserInvites invitations={props.invitations} />
             </NavbarItem>
             <NavbarItem>
               <div className="hidden sm:block">
@@ -71,7 +68,7 @@ export default function Header(props) {
             </NavbarItem>
           </NavbarContent>
         </>
-        :
+      ) : (
         <NavbarContent>
           <NavbarItem isActive={pathname === '/'}>
             <Link color="foreground" href="/">
@@ -84,7 +81,7 @@ export default function Header(props) {
             </Link>
           </NavbarItem>
         </NavbarContent>
-      }
+      )}
     </Navbar>
   );
 }
