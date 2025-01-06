@@ -8,6 +8,7 @@ import {
   Tabs,
   Tab,
   Spinner,
+  DatePicker,
 } from '@nextui-org/react';
 import { useState, useEffect, useRef } from 'react';
 import {
@@ -25,15 +26,17 @@ export default function DashboardAccount(props) {
   const [account, setAccount] = useState(props.account);
   const [period, setPeriod] = useState(periods.currentMonth);
   const [loading, setLoading] = useState(true);
+  const [customFromDate, setCustomFromDate] = useState(null);
+  const [customToDate, setCustomToDate] = useState(null);
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
   useEffect(() => {
     setLoading(true);
-    getData(account, period, setLoading).then((account) => {
+    getData(account, period, setLoading, customFromDate, customToDate).then((account) => {
       setAccount(account);
     });
-  }, [period]);
+  }, [period, customFromDate, customToDate]);
 
   useEffect(() => {
     if (!account.totals) return;
@@ -66,47 +69,77 @@ export default function DashboardAccount(props) {
 
   return (
     <Card className="bg-default-100">
-      <CardHeader className="flex gap-2 justify-between flex-wrap">
-        <h2>{account.name}</h2>
-        <Tabs variant="bordered" selectedKey={period} onSelectionChange={setPeriod}>
-          {Object.keys(periods).map((key) => (
-            <Tab key={key} title={periods[key].name} />
-          ))}
-        </Tabs>
+      <CardHeader className="flex flex-col gap-2 w-full">
+        <div className="flex gap-2 justify-between flex-wrap w-full">
+          <h2>{account.name}</h2>
+          <Tabs variant="bordered" selectedKey={period} onSelectionChange={setPeriod}>
+            {Object.keys(periods).map((key) => (
+              <Tab key={key} title={periods[key].name} />
+            ))}
+          </Tabs>
+        </div>
+        <div className="flex justify-end w-full">
+          {period === 'custom' && (
+            <div className="flex gap-2">
+              <DatePicker
+              value={customFromDate}
+              onChange={(date) => setCustomFromDate(date)}
+              label="From"
+            />
+            <DatePicker
+              value={customToDate}
+              onChange={(date) => setCustomToDate(date)}
+              label="To"
+            />
+          </div>
+          )}
+        </div>
       </CardHeader>
       <Divider />
       <CardBody>
         <div className="flex justify-between gap-6">
           <div>Electric:</div>
           <div className="text-green-400 flex items-center">
-            {loading ? <Spinner size="sm" /> : '£' + account.totals?.electric.toFixed(2)}
+            {period === 'custom' && (!customFromDate || !customToDate) ? 
+              '' 
+              : 
+              loading ? <Spinner size="sm" /> : '£' + account.totals?.electric.toFixed(2)
+            }
           </div>
         </div>
         <div className="flex justify-between gap-6">
           <div>Gas:</div>
           <div className="text-blue-400 flex items-center">
-            {loading ? <Spinner size="sm" /> : '£' + account.totals?.gas.toFixed(2)}
+            {period === 'custom' && (!customFromDate || !customToDate) ? 
+              '' 
+              : 
+              loading ? <Spinner size="sm" /> : '£' + account.totals?.gas.toFixed(2)
+            }
           </div>
         </div>
         <div className="flex justify-between gap-6 mt-2">
           <div>Total:</div>
           <div className="flex items-center">
-            {loading ? (
-              <Spinner size="sm" />
-            ) : (
-              '£' + add(account.totals?.electric, account.totals?.gas)
-            )}
+            {period === 'custom' && (!customFromDate || !customToDate) ? 
+              '' 
+              : 
+              loading ? <Spinner size="sm" /> : '£' + add(account.totals?.electric, account.totals?.gas)
+            }
           </div>
         </div>
         <Divider className="mt-3" />
 
         <div className="h-64 w-64 mx-auto flex justify-center items-center">
-          {loading ? <Spinner /> : <canvas ref={chartRef} width="400" height="400"></canvas>}
+          {period === 'custom' && (!customFromDate || !customToDate) ? 
+            'Select a from and to date' 
+            : 
+            loading ? <Spinner /> : <canvas ref={chartRef} width="400" height="400"></canvas>
+          }
         </div>
         <Divider className="my-3" />
-        <div>
+        <div className="flex flex-col gap-2">
           <h3>Properties</h3>
-          <ul>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {account.properties.map((property) => (
               <li className="capitalize text-sm" key={property.id}>
                 <div className="flex gap-4">
@@ -176,10 +209,24 @@ const periods = {
     group: 'month',
     name: 'Last Year',
   },
+  custom: {
+    dateFrom: null,
+    dateTo: null,
+    group: 'month',
+    name: 'Custom',
+  },
 };
 
-async function getData(account, p, setLoading) {
+async function getData(account, p, setLoading, customFromDate, customToDate) {
   const period = periods[p];
+
+  if (p === 'custom') {
+    if (!customFromDate || !customToDate) {
+      return account;
+    }
+    period.dateFrom = new Date(customFromDate).toISOString();
+    period.dateTo = new Date(customToDate).toISOString();
+  }
 
   if (!period?.dateFrom || !period?.dateTo) {
     return account;

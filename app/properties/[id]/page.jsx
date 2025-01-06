@@ -8,12 +8,7 @@ import {
   CardBody,
   Tabs,
   Tab,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
+  DatePicker,
   Divider,
 } from '@nextui-org/react';
 import Loading from '@/app/components/loading';
@@ -49,6 +44,14 @@ export default function Page({ params }) {
       ).toISOString(),
       endDate: new Date().toISOString(),
     },
+    custom: {
+      name: 'Custom',
+      period: 'month',
+      startDate: new Date(
+        new Date(new Date().setFullYear(new Date().getFullYear() - 1)).setDate(1)
+      ).toISOString(),
+      endDate: new Date().toISOString(),
+    },
   };
 
   const [property, setProperty] = useState({});
@@ -56,6 +59,9 @@ export default function Page({ params }) {
 
   const [electricCost, setElectricCost] = useState(0);
   const [gasCost, setGasCost] = useState(0);
+
+  const [customFromDate, setCustomFromDate] = useState(null);
+  const [customToDate, setCustomToDate] = useState(null);
 
   const [view, setView] = useState('currentMonth');
 
@@ -68,7 +74,6 @@ export default function Page({ params }) {
       console.error('No data found');
       setLoading(false);
       return;
-      s;
     }
   }, []);
 
@@ -101,6 +106,19 @@ export default function Page({ params }) {
 
     async function fetchData() {
       setLoading(true);
+
+
+      if (view === 'custom') {
+        if (!customFromDate || !customToDate) {
+          setLoading(false);
+          return;
+        }
+
+        views[view].startDate = new Date(customFromDate).toISOString();
+        views[view].endDate = new Date(customToDate).toISOString();
+      }
+
+      console.log(views[view]);
 
       const account = await getAccount(params.id);
       const electricUsage = await getElectricUsage(
@@ -164,7 +182,7 @@ export default function Page({ params }) {
     }
 
     fetchData();
-  }, [view]);
+  }, [view, customFromDate, customToDate]);
 
   return (
     <div>
@@ -177,12 +195,22 @@ export default function Page({ params }) {
         </div>
         <div className="flex gap-3 sm:flex-wrap">
           <Card className="bg-default-100 w-full sm:w-fit">
-            <CardHeader>
+            <CardHeader className="flex flex-col gap-2">
               <Tabs variant="bordered" selectedKey={view} onSelectionChange={setView}>
                 {Object.keys(views).map((key) => (
                   <Tab key={key} title={views[key].name} />
                 ))}
               </Tabs>
+              <div className="flex gap-2 ml-auto">
+                <DatePicker
+                  label="From"
+                  onChange={(e) => setCustomFromDate(e)}
+                />
+                <DatePicker
+                  label="To"
+                  onChange={(e) => setCustomToDate(e)}
+                />
+              </div>
             </CardHeader>
             <CardBody>
               <div className="flex justify-between gap-4">
@@ -201,11 +229,13 @@ export default function Page({ params }) {
             </CardBody>
           </Card>
         </div>
-        <Card className="bg-default-100 w-full max-w-[902px] h-[350px] sm:h-[500px]">
-          <CardBody className="w-full max-w-[1000px] h-full max-h-[500px]">
-            {!loading ? <UsageChart property={property} view={views[view]} /> : <Loading />}
-          </CardBody>
-        </Card>
+        {view !== 'custom' ?
+          <Card className="bg-default-100 w-full max-w-[902px] h-[350px] sm:h-[500px]">
+            <CardBody className="w-full max-w-[1000px] h-full max-h-[500px]">
+              {!loading ? <UsageChart property={property} view={views[view]} /> : <Loading />}
+            </CardBody>
+          </Card>
+          : ''}
       </div>
     </div>
   );
