@@ -19,6 +19,11 @@ export default function UsageChart(props) {
         case 'day':
           let usageData =
             usage.find((data) => data.interval_start.split('T')[0] === labels[i])?.consumption || 0;
+            
+          if (props.property.usage.gas === usage) {
+            usageData = usageData * 40.0 * 1.02264 / 3.6;
+          }
+          
           let unitRate = getUnitRate(unitRates, labels[i]);
           let standingCharge = getStandingCharge(standingCharges, labels[i]);
 
@@ -39,6 +44,10 @@ export default function UsageChart(props) {
 
           if (monthData) {
             monthlyUsage = monthData.consumption;
+            
+            if (props.property.usage.gas === usage) {
+              monthlyUsage = monthlyUsage * 40.0 * 1.02264 / 3.6;
+            }
 
             let monthlyUnitRate = getUnitRate(unitRates, labels[i]);
 

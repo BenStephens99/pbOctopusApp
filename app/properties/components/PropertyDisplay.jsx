@@ -5,12 +5,6 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
   Divider,
 } from '@nextui-org/react';
 import { calculateElectric, calculateGas, add } from '@/app/actions/calculations';

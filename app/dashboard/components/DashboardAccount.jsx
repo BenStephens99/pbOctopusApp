@@ -287,32 +287,40 @@ async function getData(account, p, setLoading, customFromDate, customToDate) {
   };
 
   for (const property of updatedAccount.properties) {
-    if (property.mpan && property.electricSerialNumbers?.length) {
-      property.usage = {
-        electric: [],
-        gas: [],
-      };
+    const usagePromises = [];
+    property.usage = {
+      electric: [],
+      gas: [],
+    };
 
-      property.usage.electric = await getElectricUsage(
-        updatedAccount.api_key,
-        property.mpan,
-        property.electricSerialNumbers,
-        period.dateFrom,
-        period.dateTo,
-        period.group
+    if (property.mpan && property.electricSerialNumbers?.length) {
+      usagePromises.push(
+        getElectricUsage(
+          updatedAccount.api_key,
+          property.mpan,
+          property.electricSerialNumbers,
+          period.dateFrom,
+          period.dateTo,
+          period.group
+        ).then(result => property.usage.electric = result)
       );
     }
 
     if (property.mprn && property.gasSerialNumbers?.length) {
-      property.usage.gas = await getGasUsage(
-        updatedAccount.api_key,
-        property.mprn,
-        property.gasSerialNumbers,
-        period.dateFrom,
-        period.dateTo,
-        period.group
+      usagePromises.push(
+        getGasUsage(
+          updatedAccount.api_key,
+          property.mprn,
+          property.gasSerialNumbers,
+          period.dateFrom,
+          period.dateTo,
+          period.group
+        ).then(result => property.usage.gas = result)
       );
     }
+
+    // Wait for both requests to complete
+    await Promise.all(usagePromises);
 
     property.usage.totals = {
       electric: calculateElectric(

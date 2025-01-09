@@ -43,8 +43,10 @@ export function calculateGas(usage, standingCharges, unitRates, period = 'day') 
     }
 
     const unitRate = getUnitRate(unitRates, intervalStart);
-
-    const dailyCost = consumption * unitRate + standingCharge;
+    
+    // Convert gas consumption from cubic meters to kWh
+    const kwhConsumption = consumption * 40.0 * 1.02264 / 3.6;
+    const dailyCost = (kwhConsumption * unitRate) + standingCharge;
 
     totalCost += dailyCost;
   }

@@ -201,16 +201,18 @@ export default function Page({ params }) {
                   <Tab key={key} title={views[key].name} />
                 ))}
               </Tabs>
-              <div className="flex gap-2 ml-auto">
-                <DatePicker
-                  label="From"
+              {view === 'custom' ?
+                <div className="flex gap-2 ml-auto">
+                  <DatePicker
+                    label="From"
                   onChange={(e) => setCustomFromDate(e)}
                 />
                 <DatePicker
                   label="To"
                   onChange={(e) => setCustomToDate(e)}
-                />
-              </div>
+                  />
+                </div>
+                : ''}
             </CardHeader>
             <CardBody>
               <div className="flex justify-between gap-4">
